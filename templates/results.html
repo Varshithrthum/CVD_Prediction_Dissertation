@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="static/results.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Results</h1>
+
+        <!-- Blood Pressure Note at the top -->
+        <p><strong>Note:</strong> If you used the CalcPark Blood Pressure Calculator, please note that it is only an estimation tool. For the most accurate CVD risk predictions, it's recommended to use actual blood pressure readings measured by a healthcare professional.</p>
+
+        <!-- Key Results Section -->
+        <p><strong>Risk Category:</strong> <span class="risk-category {% if report_data.prediction == 'Low Risk' %}low{% elif report_data.prediction == 'Moderate Risk' %}moderate{% else %}high{% endif %}">{{ report_data.prediction }}</span></p>
+
+        <p><strong>Your Risk Percentage for CVD:</strong> {{ (report_data.probability * 100) | round(0) }}%</p>
+
+        <!-- "What Does It Mean" Card -->
+        <div class="what-does-it-mean">
+            <h2>What Does It Mean?</h2>
+            <div class="card">
+                {% if report_data.prediction == 'Low Risk' %}
+                    <p><strong>Low Risk:</strong> Your CVD risk is below 40%. This means you are less likely to develop cardiovascular disease in the near future, but maintaining a healthy lifestyle is essential.</p>
+                {% elif report_data.prediction == 'Moderate Risk' %}
+                    <p><strong>Moderate Risk:</strong> Your CVD risk percentage is between 40% and 60%. It is recommended that you consult with a healthcare provider to discuss steps to reduce your risk through lifestyle changes and possibly medication.</p>
+                {% elif report_data.prediction == 'High Risk' %}
+                    <p><strong>High Risk:</strong> Your CVD risk percentage is above 60%. You should seek medical advice immediately. Lifestyle changes and likely medication are necessary to lower your risk of cardiovascular disease.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Top 5 Risk Factors Pie Chart -->
+        <h2>Top 5 Risk Factors (Percentage)</h2>
+        <canvas id="riskFactorsChart"></canvas>
+
+        <!-- Recommendations Section -->
+        <h2>Recommendations</h2>
+        <div class="recommendation">
+            <ul>
+                {% for factor, details in report_data.recommendations.items() %}
+                    <li><strong>{{ factor }}:</strong> {{ details.recommendation }} 
+                        <a href="{{ details.link }}" target="_blank">Read more on NHS</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Blood Pressure Bar Chart -->
+        <h2>Blood Pressure</h2>
+        <canvas id="bloodPressureChart"></canvas>
+
+        <!-- Blood Pressure Category Explanation and Recommendations -->
+        <h2>Blood Pressure Category and Trusted Recommendations</h2>
+        <div class="recommendation">
+            {% if report_data.ap_hi >= 180 or report_data.ap_lo >= 120 %}
+                <p><strong>Hypertensive Crisis:</strong> Your blood pressure is dangerously high (Systolic: {{ report_data.ap_hi }} mmHg, Diastolic: {{ report_data.ap_lo }} mmHg). Seek immediate medical attention as you may be at risk of serious complications like a heart attack or stroke.</p>
+                <p><a href="https://www.nhs.uk/conditions/high-blood-pressure-hypertension/" target="_blank" aria-label="Learn more about hypertensive crisis from NHS">Learn more from the NHS</a></p>
+            
+            {% elif report_data.ap_hi >= 140 or report_data.ap_lo >= 90 %}
+                <p><strong>Stage 2 Hypertension:</strong> Your blood pressure is high (Systolic: {{ report_data.ap_hi }} mmHg, Diastolic: {{ report_data.ap_lo }} mmHg). Take steps to lower it through lifestyle changes and consult your GP for advice. You may need medication to control it.</p>
+                <ul>
+                    <li><strong>Reduce Salt Intake:</strong> Consume less than 6g of salt daily. Avoid processed and high-sodium foods. <a href="https://www.nhs.uk/live-well/eat-well/how-to-cut-down-on-salt/" target="_blank" aria-label="Learn more about salt reduction from NHS">Read more from the NHS</a></li>
+                    <li><strong>Increase Physical Activity:</strong> Aim for 150 minutes of moderate-intensity exercise each week. <a href="https://www.nhs.uk/live-well/exercise/" target="_blank" aria-label="Exercise tips from NHS">Exercise tips from NHS</a></li>
+                    <li><strong>Weight Management:</strong> If overweight, losing weight can help reduce your blood pressure. <a href="https://www.heart.org/en/healthy-living/healthy-eating/losing-weight" target="_blank" aria-label="Weight loss tips from American Heart Association">Weight loss tips from the American Heart Association</a></li>
+                    <li><strong>Quit Smoking and Limit Alcohol:</strong> Reducing alcohol and quitting smoking will improve your heart health. <a href="https://www.bhf.org.uk/informationsupport/support/quit-smoking" target="_blank" aria-label="Quit smoking support from British Heart Foundation">Quit smoking support from British Heart Foundation</a></li>
+                </ul>
+
+            {% elif report_data.ap_hi >= 130 or report_data.ap_lo >= 80 %}
+                <p><strong>Stage 1 Hypertension:</strong> Your blood pressure is slightly elevated (Systolic: {{ report_data.ap_hi }} mmHg, Diastolic: {{ report_data.ap_lo }} mmHg). Make lifestyle changes to lower your blood pressure and prevent further increases.</p>
+                <ul>
+                    <li><strong>Eat a Balanced Diet:</strong> Follow a diet rich in fruits, vegetables, and whole grains. <a href="https://www.nhs.uk/live-well/eat-well/the-dash-diet/" target="_blank" aria-label="Learn more about the DASH diet from NHS">Read more from NHS</a></li>
+                    <li><strong>Reduce Stress:</strong> Try relaxation techniques like meditation or yoga. <a href="https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/tips-to-reduce-stress/" target="_blank" aria-label="Learn more about stress reduction from NHS">Learn more about stress reduction from the NHS</a></li>
+                    <li><strong>Limit Caffeine:</strong> If you're sensitive to caffeine, reducing your intake may help lower your blood pressure. <a href="https://www.healthline.com/nutrition/does-caffeine-raise-blood-pressure" target="_blank" aria-label="Learn more about caffeine and blood pressure from Healthline">Read more about caffeine from Healthline</a></li>
+                </ul>
+
+            {% else %}
+                <p><strong>Normal Blood Pressure:</strong> Your blood pressure is within the healthy range (Systolic: {{ report_data.ap_hi }} mmHg, Diastolic: {{ report_data.ap_lo }} mmHg). Keep maintaining a healthy lifestyle to ensure it stays that way!</p>
+                <ul>
+                    <li><strong>Maintain a Healthy Diet:</strong> Continue eating plenty of fruits, vegetables, and whole grains. <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" aria-label="Learn more about a healthy diet from WHO">Learn more from the WHO</a></li>
+                    <li><strong>Stay Physically Active:</strong> Engage in regular exercise to maintain heart health. <a href="https://www.nhs.uk/live-well/exercise/" target="_blank" aria-label="Exercise tips from NHS">Exercise tips from NHS</a></li>
+                    <li><strong>Monitor Your Blood Pressure:</strong> Keep track of your blood pressure regularly. <a href="https://www.bhf.org.uk/informationsupport/heart-matters-magazine/medical/measuring-your-blood-pressure-at-home" target="_blank" aria-label="Learn how to measure blood pressure at home from British Heart Foundation">How to measure BP at home from BHF</a></li>
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Flowchart for CVD Risk Category -->
+        <h1>Next Steps Based on CVD Risk Category</h1>
+        <div class="flowchart-container">
+            <div id="low-risk" class="flowchart-box low hidden">
+                <strong>Low Risk</strong><br>
+                <small>Maintain a healthy lifestyle.</small>
+                <ul>
+                    <li><a href="https://www.nhs.uk/live-well/healthy-body/keep-your-heart-healthy/" target="_blank">NHS: Heart-Healthy Lifestyle</a></li>
+                    <li><a href="https://www.heart.org/en/healthy-living/healthy-lifestyle/lifes-simple-7" target="_blank">AHA: Life's Simple 7</a></li>
+                    <li><a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank">WHO: Healthy Diet</a></li>
+                </ul>
+            </div>
+
+            <div id="moderate-risk" class="flowchart-box moderate hidden">
+                <strong>Moderate Risk</strong><br>
+                <small>Consult with a healthcare provider and adopt a heart-healthy diet.</small>
+                <ul>
+                    <li><a href="https://www.nhs.uk/conditions/high-blood-pressure-hypertension/" target="_blank">NHS: High Blood Pressure Management</a></li>
+                    <li><a href="https://www.bhf.org.uk/informationsupport/heart-matters-magazine/wellbeing/maintaining-a-healthy-lifestyle" target="_blank">BHF: Heart Health Guide</a></li>
+                    <li><a href="https://www.heart.org/en/healthy-living/healthy-lifestyle/preventing-heart-disease---at-any-age" target="_blank">AHA: Preventing Heart Disease</a></li>
+                </ul>
+            </div>
+
+            <div id="high-risk" class="flowchart-box high hidden">
+                <strong>High Risk</strong><br>
+                <small>Consult a cardiologist, lifestyle changes are critical, medication likely required.</small>
+                <ul>
+                    <li><a href="https://www.nhs.uk/conditions/high-cholesterol/" target="_blank">NHS: Managing Cholesterol</a></li>
+                    <li><a href="https://www.bhf.org.uk/informationsupport/conditions/heart-attack" target="_blank">BHF: Heart Attack Prevention</a></li>
+                    <li><a href="https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds)" target="_blank">WHO: Cardiovascular Disease</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Form to download the PDF -->
+        <form id="pdf-form" action="/download-pdf" method="POST">
+            <input type="hidden" name="prediction" value="{{ report_data.prediction }}">
+            <input type="hidden" name="probability" value="{{ report_data.probability }}">
+            <input type="hidden" name="risk_color" value="{{ report_data.risk_color }}">
+            <input type="hidden" name="ap_hi" value="{{ report_data.ap_hi }}">
+            <input type="hidden" name="ap_lo" value="{{ report_data.ap_lo }}">
+            <input type="hidden" name="bmi" value="{{ report_data.bmi }}">
+            <input type="hidden" name="age" value="{{ report_data.age }}">
+            <input type="hidden" name="gender" value="{{ report_data.gender }}">
+            <input type="hidden" id="risk_factors_percentage" name="risk_factors_percentage">
+            <input type="hidden" id="recommendations" name="recommendations">
+            <button type="submit"class="download-button">Download Your report</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('risk_factors_percentage').value = JSON.stringify({{ report_data.risk_factors_percentage|tojson }});
+        document.getElementById('recommendations').value = JSON.stringify({{ report_data.recommendations|tojson }});
+
+        const riskFactorsData = {
+            labels: Object.keys({{ report_data.risk_factors_percentage|tojson }}),
+            datasets: [{
+                label: 'Top 5 Risk Factors',
+                data: Object.values({{ report_data.risk_factors_percentage|tojson }}),
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8DFF57', '#FF5733'],
+                hoverOffset: 4
+            }]
+        };
+
+        const riskFactorsConfig = {
+            type: 'pie',
+            data: riskFactorsData,
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const riskFactorsChart = new Chart(
+            document.getElementById('riskFactorsChart'),
+            riskFactorsConfig
+        );
+
+        const bloodPressureData = {
+            labels: ['Systolic BP', 'Diastolic BP'],
+            datasets: [{
+                label: 'Blood Pressure (mmHg)',
+                data: [{{ report_data.ap_hi }}, {{ report_data.ap_lo }}],
+                backgroundColor: ['#FF6384', '#36A2EB'],
+                borderColor: ['#FF6384', '#36A2EB'],
+                borderWidth: 1
+            }]
+        };
+
+        const bloodPressureConfig = {
+            type: 'bar',
+            data: bloodPressureData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Blood Pressure (mmHg)',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Type',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' mmHg';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const bloodPressureChart = new Chart(
+            document.getElementById('bloodPressureChart'),
+            bloodPressureConfig
+        );
+
+        const predictedRisk = document.querySelector('.risk-category').innerText.trim();
+
+        function showFlowchartBasedOnRisk(riskCategory) {
+            document.getElementById('low-risk').classList.add('hidden');
+            document.getElementById('moderate-risk').classList.add('hidden');
+            document.getElementById('high-risk').classList.add('hidden');
+
+            if (riskCategory === 'Low Risk') {
+                document.getElementById('low-risk').classList.remove('hidden');
+            } else if (riskCategory === 'Moderate Risk') {
+                document.getElementById('moderate-risk').classList.remove('hidden');
+            } else if (riskCategory === 'High Risk') {
+                document.getElementById('high-risk').classList.remove('hidden');
+            }
+        }
+
+        showFlowchartBasedOnRisk(predictedRisk);
+    </script>
+</body>
+</html>

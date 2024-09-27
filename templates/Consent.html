@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Form</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Consent Form</h1>
+        <p>Before proceeding to the CVD Risk Prediction Tool, please read and agree to the following terms:</p>
+        <p>
+            This app provides predictions based on the information you enter. However, it is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your healthcare provider with any questions you may have regarding your health.
+        </p>
+        <p>
+            By clicking "I Agree", you consent to the processing of the data you provide for the purpose of generating a risk prediction. Your data will not be stored or shared.
+        </p>
+        
+        <form action="/consent" method="POST">
+            <button type="submit" class="btn">I Agree</button>
+        </form>
+    </div>
+</body>
+</html>

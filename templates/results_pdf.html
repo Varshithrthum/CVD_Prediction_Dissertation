@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            background-color: #ffffff;
+            color: #212b32;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #005eb8;
+        }
+        p {
+            font-size: 20px;
+        }
+        .risk-category {
+            font-size: 24px;
+            font-weight: bold;
+            color: {{ report_data.risk_color }};
+        }
+        /* Additional styles for recommendations */
+        .recommendations {
+            margin-top: 20px;
+        }
+        .recommendations h2 {
+            color: #005eb8;
+        }
+        .recommendations ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        .recommendations li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Report</h1>
+
+        <!-- Prediction Results -->
+        <p><strong>Risk Category:</strong> <span class="risk-category">{{ report_data.prediction }}</span></p>
+        <p><strong>Probability:</strong> {{ report_data.probability }}%</p>
+
+        <!-- Blood Pressure -->
+        <p><strong>Systolic Blood Pressure:</strong> {{ report_data.ap_hi }} mmHg</p>
+        <p><strong>Diastolic Blood Pressure:</strong> {{ report_data.ap_lo }} mmHg</p>
+
+        <!-- BMI -->
+        <p><strong>BMI:</strong> {{ report_data.bmi }}</p>
+
+        <!-- Age and Gender -->
+        <p><strong>Age:</strong> {{ report_data.age }}</p>
+        <p><strong>Gender:</strong> {{ report_data.gender }}</p>
+
+        <!-- Recommendations Section -->
+        <div class="recommendations">
+            <h2>Recommendations</h2>
+            <ul>
+                {% for factor, details in report_data.recommendations.items() %}
+                    <li><strong>{{ factor }}:</strong> {{ details.recommendation }} 
+                        <a href="{{ details.link }}" target="_blank">Read more</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

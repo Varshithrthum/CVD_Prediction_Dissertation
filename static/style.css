@@ -1,0 +1,159 @@
+/* Body and container styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Styling for number input fields */
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Styling for radio button groups displayed horizontally */
+.radio-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.radio-group label {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Styling for height toggle and conversion */
+.height-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.toggle-height {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Submit button */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+/* Information text */
+.info-text {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* List styling */
+.info-list {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+ul.info-list li {
+    margin-bottom: 5px;
+}
+
+/* Hyperlink styling */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* SHAP plot styling */
+img {
+    max-width: 100%;
+    margin-top: 20px;
+}
+
+/* Collapsible section styling */
+.collapsible {
+    background-color: #f1f1f1;
+    color: #333;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.content {
+    padding: 10px;
+    margin-top: 5px;
+    display: none;
+    background-color: #fafafa;
+    border-left: 3px solid #3498db;
+}
+
+/* Box styles */
+.info-box {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
