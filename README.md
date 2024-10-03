@@ -29,3 +29,14 @@ venv\Scripts\activate
 source venv/bin/activate
 # Install required packages from requirements.txt
 pip install -r requirements.txt
+
+running the app
+python app.py
+
+runing the tests
+
+pytest and name of the file
+
+ex:
+pytest scenairo_testing.py
+
